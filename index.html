@@ -247,16 +247,27 @@ html, body {
   <script src="renpy-pre.js"></script>
   <script async type="text/javascript" src="renpy.js"></script>
 
-  <script>
+ <script>
 const fsButton = document.getElementById('fullscreenButton');
 fsButton.addEventListener('click', () => {
     const canvas = document.getElementById('renpy-game-canvas') || document.getElementById('canvas');
+    if (!canvas) return;
+
     if (canvas.requestFullscreen) {
         canvas.requestFullscreen();
-    } else if (canvas.webkitRequestFullscreen) { 
+    } else if (canvas.webkitRequestFullscreen) { // Safari
         canvas.webkitRequestFullscreen();
-    } else if (canvas.msRequestFullscreen) {
+    } else if (canvas.msRequestFullscreen) { // IE11
         canvas.msRequestFullscreen();
+    }
+});
+
+
+document.addEventListener('fullscreenchange', () => {
+    if (document.fullscreenElement) {
+        fsButton.style.display = 'none';
+    } else {
+        fsButton.style.display = 'block';
     }
 });
 </script>
