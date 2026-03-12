@@ -58,7 +58,7 @@ html, body {
     position: fixed;
     top: 10px;
     right: 10px;
-    z-index: 9999;               /* on top of canvas */
+    z-index: 99999;     
     padding: 10px 15px;
     font-size: 16px;
     background: rgba(0,0,0,0.7);
@@ -66,8 +66,10 @@ html, body {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    display: block;               /* ensure visibility */
 }
+#fullscreenButton {
+    pointer-events: auto;   
+}    
     .visible {
       visibility: visible;
       opacity: 1.0;
@@ -249,8 +251,12 @@ html, body {
 
  <script>
 const fsButton = document.getElementById('fullscreenButton');
-fsButton.addEventListener('click', () => {
-    const canvas = document.getElementById('renpy-game-canvas') || document.getElementById('canvas');
+
+function fullscreenHandler(e) {
+    e.preventDefault();
+    const canvas = document.getElementById('renpy-game-canvas') 
+                  || document.getElementById('canvas') 
+                  || document.querySelector('#overlayDiv canvas');
     if (!canvas) return;
 
     if (canvas.requestFullscreen) {
@@ -260,9 +266,13 @@ fsButton.addEventListener('click', () => {
     } else if (canvas.msRequestFullscreen) { // IE11
         canvas.msRequestFullscreen();
     }
-});
+}
 
+// Listen for clicks and touch events
+fsButton.addEventListener('click', fullscreenHandler);
+fsButton.addEventListener('touchstart', fullscreenHandler);
 
+// Hide button when fullscreen is active
 document.addEventListener('fullscreenchange', () => {
     if (document.fullscreenElement) {
         fsButton.style.display = 'none';
